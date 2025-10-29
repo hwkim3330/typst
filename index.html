@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>End-to-End 자율주행 기술의 현황과 미래 전망</title>
+    <style>
+        :root {
+            --primary-color: #1e40af;
+            --secondary-color: #3b82f6;
+            --accent-color: #059669;
+            --bg-color: #ffffff;
+            --text-color: #1f2937;
+            --gray-100: #f8fafc;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-600: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+            line-height: 1.7;
+            color: var(--text-color);
+            background: var(--bg-color);
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.95;
+            margin-bottom: 15px;
+        }
+
+        .meta {
+            font-size: 1em;
+            opacity: 0.9;
+            margin-top: 20px;
+        }
+
+        nav {
+            background: var(--gray-100);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+        }
+
+        nav h2 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        nav ul {
+            list-style: none;
+        }
+
+        nav li {
+            margin: 8px 0;
+        }
+
+        nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.2s;
+            display: block;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+            background: white;
+        }
+
+        section {
+            margin-bottom: 60px;
+        }
+
+        h2 {
+            font-size: 2em;
+            color: var(--primary-color);
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        h3 {
+            font-size: 1.5em;
+            color: var(--secondary-color);
+            margin: 30px 0 15px 0;
+        }
+
+        h4 {
+            font-size: 1.2em;
+            color: var(--text-color);
+            margin: 20px 0 10px 0;
+        }
+
+        p {
+            margin: 15px 0;
+            text-align: justify;
+        }
+
+        .highlight-box {
+            background: var(--gray-100);
+            padding: 25px;
+            border-radius: 8px;
+            margin: 25px 0;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        tr:nth-child(even) {
+            background: var(--gray-100);
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+            align-items: start;
+        }
+
+        .timeline-year {
+            background: var(--primary-color);
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .timeline-content {
+            background: var(--gray-100);
+            padding: 20px;
+            border-radius: 6px;
+        }
+
+        .timeline-content h4 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .architecture-diagram {
+            background: var(--gray-100);
+            padding: 30px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        .flow-item {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin: 5px;
+            font-size: 0.9em;
+        }
+
+        .flow-arrow {
+            display: inline-block;
+            font-size: 1.5em;
+            margin: 0 10px;
+            color: var(--gray-600);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .comparison-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-top: 4px solid var(--primary-color);
+        }
+
+        .comparison-card h4 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        footer {
+            background: var(--gray-100);
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 60px;
+            color: var(--gray-600);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .timeline-item {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                position: static;
+            }
+        }
+
+        .label {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            margin: 5px 5px 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>End-to-End 자율주행 기술의<br>현황과 미래 전망</h1>
+            <p class="subtitle">Foundation Models와 생성 AI 기반 자율주행 시스템의<br>기술적 진화와 산업 생태계 분석</p>
+            <p class="meta">한국전자통신연구원 (KETI) | 지능형 모빌리티 연구센터<br>2025년 10월</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <nav>
+            <h2>📑 목차</h2>
+            <ul>
+                <li><a href="#intro">서론</a></li>
+                <li><a href="#tech-foundation">End-to-End 자율주행의 기술적 기반</a></li>
+                <li><a href="#timeline">기술 발전 타임라인</a></li>
+                <li><a href="#foundation-models">Foundation Models와 생성 AI</a></li>
+                <li><a href="#industry">글로벌 자율주행 산업 현황</a></li>
+                <li><a href="#trends-2025">2025년 기술 동향과 산업 전망</a></li>
+                <li><a href="#challenges">기술적 과제와 미래 전망</a></li>
+                <li><a href="#conclusion">결론</a></li>
+            </ul>
+        </nav>
+
+        <section id="abstract">
+            <div class="highlight-box">
+                <h3>요약</h3>
+                <p>본 보고서는 자율주행 기술의 최신 패러다임인 End-to-End 학습 방식과 Foundation Models의 융합을 중심으로, 글로벌 자율주행 산업의 기술적 발전 현황과 주요 기업들의 상용화 전략을 종합적으로 분석한다. 특히 Tesla의 FSD, Waymo의 Robotaxi, 그리고 중국 시장의 급속한 발전을 심층 분석하고, 2025년부터 2030년까지의 기술 로드맵과 산업 전망을 제시한다.</p>
+            </div>
+        </section>
+
+        <section id="intro">
+            <h2>1. 서론</h2>
+
+            <h3>1.1 연구 배경 및 목적</h3>
+            <p>자율주행 기술은 21세기 교통 혁명의 핵심으로 부상하고 있다. 지난 수십 년간 모듈식 아키텍처를 중심으로 발전해온 자율주행 시스템은, 최근 인공지능 기술의 비약적 발전과 함께 End-to-End 학습 방식이라는 새로운 패러다임으로 전환되고 있다. 전통적인 모듈식 접근은 인지, 예측, 계획, 제어를 독립된 모듈로 구현하여 개발과 검증이 체계적이라는 장점이 있었으나, 모듈 간 정보 손실과 부분 최적화라는 근본적 한계를 가지고 있었다.</p>
+
+            <p>End-to-End 학습은 센서 입력에서 제어 명령까지 전체 과정을 단일 신경망으로 학습하여 이러한 한계를 극복한다. 1980년대 ALVINN에서 처음 제안되었으나 실용화되지 못했던 이 접근은, 2010년대 중반 딥러닝의 발전, GPU 성능 향상, 대규모 데이터 축적으로 재조명받기 시작했다. 특히 2016년 NVIDIA의 연구와 Tesla의 FSD 시스템 도입은 이 패러다임의 실현 가능성을 입증했다.</p>
+
+            <p>최근에는 자연어 처리와 컴퓨터 비전에서 성공한 Foundation Models가 자율주행에 도입되고 있다. Vision Transformer, World Models, Diffusion Models 등이 인지, 예측, 시뮬레이션 능력을 혁신적으로 향상시키고 있으며, Bird's Eye View 표현과 결합하여 3차원 공간 이해 능력을 대폭 개선했다.</p>
+
+            <p>본 보고서는 이러한 기술적 진화의 맥락에서 End-to-End 자율주행 시스템의 현황을 종합적으로 분석한다. 주요 학습 방법론, Foundation Models와 생성 AI의 통합, 글로벌 기업들의 기술 개발 현황과 상용화 전략을 다룬다. 특히 Tesla의 vision-only 접근, Waymo의 Level 4 Robotaxi, 중국 시장의 급속한 발전을 중점 분석하며, 2025년부터 2030년까지의 기술 로드맵과 산업 전망을 제시한다.</p>
+
+            <h3>1.2 연구 방법 및 범위</h3>
+            <p>본 연구는 문헌 조사, 산업 동향 분석, 기술 벤치마킹을 종합하는 접근 방식을 채택하였다. 학술 문헌은 CVPR, ICCV, NeurIPS, ICRA 등 주요 학회의 최근 3년간 논문과 arXiv 사전공개 논문을 중심으로 조사하였다. 산업 동향은 Tesla, Waymo, Cruise, Baidu Apollo 등 선도 기업들의 공개 자료, 기술 블로그, 투자자 발표 자료를 분석하였으며, Gartner, McKinsey, ARK Invest 등의 산업 분석 보고서를 참고하였다. 기술 벤치마킹은 nuScenes, Waymo Open Dataset, Argoverse 등의 공개 데이터셋과 CARLA 시뮬레이터, Apollo 플랫폼 등 오픈소스 프로젝트를 활용하였다.</p>
+
+            <p>시간적 범위는 2020년부터 2025년 현재까지를 중심으로 하되 2030년까지의 미래 전망을 포함한다. 지리적 범위는 미국(기술 선도), 중국(빠른 상용화), 유럽(안전 규제), 한국(후발 주자)을 중점 다룬다. 기술적 범위는 End-to-End 학습, Foundation Models, 생성 AI, BEV 표현, Transformer 아키텍처 등 소프트웨어와 AI 알고리즘에 초점을 둔다.</p>
+        </section>
+
+        <section id="tech-foundation">
+            <h2>2. End-to-End 자율주행의 기술적 기반</h2>
+
+            <h3>2.1 패러다임의 전환: 모듈식에서 통합식으로</h3>
+
+            <div class="architecture-diagram">
+                <h4>모듈식 아키텍처</h4>
+                <div style="text-align: center; margin: 20px 0;">
+                    <div class="flow-item" style="background: #93c5fd;">센서<br><small>카메라, LiDAR, 레이더</small></div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-item" style="background: #bfdbfe;">인지<br><small>객체 검출, 차선</small></div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-item" style="background: #dbeafe;">예측<br><small>궤적 예측</small></div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-item" style="background: #eff6ff;">계획<br><small>경로 생성</small></div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-item" style="background: #f0f9ff;">제어<br><small>조향, 가감속</small></div>
+                </div>
+                <p style="text-align: center; color: var(--gray-600); font-size: 0.9em;">⚠ 각 모듈 간 정보 손실 발생 | 독립적 최적화 | 오류 누적</p>
+            </div>
+
+            <div class="architecture-diagram" style="background: #ecfdf5;">
+                <h4 style="color: var(--accent-color);">End-to-End 아키텍처</h4>
+                <div style="text-align: center; margin: 20px 0;">
+                    <div class="flow-item" style="background: #6ee7b7;">센서<br><small>카메라 (멀티뷰)</small></div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-item" style="background: #a7f3d0; padding: 20px 25px;">통합 신경망<br><small>Vision Transformer, BEV Encoder<br>Temporal Fusion, Planning Network</small></div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-item" style="background: #d1fae5;">제어<br><small>조향, 가감속</small></div>
+                </div>
+                <p style="text-align: center; color: var(--accent-color); font-size: 0.9em;">✓ 최소 정보 손실 | 전역 최적화 | 오류 분산</p>
+            </div>
+
+            <p>자율주행 기술의 발전 과정에서 가장 근본적인 변화는 시스템 아키텍처의 패러다임 전환이다. 전통적인 모듈식 아키텍처는 5단계의 명확한 처리 파이프라인을 가지며 각 단계가 구조화된 데이터를 주고받는다. 반면 End-to-End 아키텍처는 센서 데이터가 단일한 통합 신경망을 거쳐 직접 제어 명령으로 변환된다.</p>
+
+            <h3>2.2 모듈식 vs End-to-End 비교</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>구분</th>
+                        <th>모듈식 아키텍처</th>
+                        <th>End-to-End 아키텍처</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>시스템 구조</strong></td>
+                        <td>센서 → 인지 → 예측 → 계획 → 제어<br>각 모듈 독립적 개발</td>
+                        <td>센서 → 통합 신경망 → 제어<br>전체를 하나로 학습</td>
+                    </tr>
+                    <tr>
+                        <td><strong>최적화 방식</strong></td>
+                        <td>모듈별 독립 최적화 (부분 최적화)</td>
+                        <td>전체 통합 최적화 (전역 최적화)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>해석 가능성</strong></td>
+                        <td>높음 - 각 모듈 출력 검사 가능</td>
+                        <td>낮음 - 블랙박스 특성</td>
+                    </tr>
+                    <tr>
+                        <td><strong>확장성</strong></td>
+                        <td>제한적 - 인터페이스 의존성</td>
+                        <td>우수함 - Scaling law 적용</td>
+                    </tr>
+                    <tr>
+                        <td><strong>대표 시스템</strong></td>
+                        <td>Waymo Driver, Apollo</td>
+                        <td>Tesla FSD v12+, Wayve</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="timeline">
+            <h2>3. End-to-End 자율주행 기술 발전 타임라인</h2>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year" style="background: #6366f1;">1989</div>
+                    <div class="timeline-content">
+                        <h4>ALVINN 시스템</h4>
+                        <p>Carnegie Mellon의 Pomerleau, 최초의 End-to-End 주행 시스템 개발. 단순 신경망으로 도로 주행 성공.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year" style="background: #8b5cf6;">2007</div>
+                    <div class="timeline-content">
+                        <h4>DARPA Urban Challenge</h4>
+                        <p>모듈식 아키텍처의 정점. Carnegie Mellon Boss 시스템 우승. 10년간 표준 접근법으로 자리잡음.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year" style="background: #a855f7;">2012</div>
+                    <div class="timeline-content">
+                        <h4>Deep Learning 혁명</h4>
+                        <p>AlexNet이 ImageNet에서 압도적 성능. 딥러닝이 컴퓨터 비전의 주류로 부상. 자율주행 인지 시스템에 CNN 적용 시작.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year" style="background: #c084fc;">2016</div>
+                    <div class="timeline-content">
+                        <h4>NVIDIA E2E 주행</h4>
+                        <p>단 9층 CNN으로 카메라→조향각 직접 예측 성공. End-to-End 학습의 실현 가능성 재입증. 72시간 데이터로 학습.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year" style="background: #d8b4fe;">2017-2019</div>
+                    <div class="timeline-content">
+                        <h4>Transformer 등장</h4>
+                        <p>2017: Attention is All You Need 발표. 2019: BERT, GPT-2 성공. 자연어 처리에서 Foundation Models 개념 확립.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year" style="background: #e9d5ff;">2020</div>
+                    <div class="timeline-content">
+                        <h4>Vision Transformer</h4>
+                        <p>Google Research, ViT 발표. Transformer가 CNN 능가. 자율주행 인지 시스템의 새로운 백본으로 부상.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year" style="background: #fca5a5;">2021</div>
+                    <div class="timeline-content">
+                        <h4>Tesla Vision-Only</h4>
+                        <p>Tesla, FSD Beta에서 LiDAR 제거, 순수 카메라 기반 시스템 채택. 대규모 플릿 데이터로 지속적 학습.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year" style="background: #fb923c;">2022</div>
+                    <div class="timeline-content">
+                        <h4>FSD Beta v11-v12</h4>
+                        <p>Tesla, End-to-End 신경망을 planning 단계까지 확장. Waymo, Level 4 Robotaxi 서비스 확대 (SF, LA).</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year" style="background: #fdba74;">2023</div>
+                    <div class="timeline-content">
+                        <h4>생성 AI 통합</h4>
+                        <p>World Models (GAIA-1, DriveGAN) 등장. Diffusion Models로 주행 시나리오 생성. Occupancy Networks 주류화.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year" style="background: #fed7aa;">2024</div>
+                    <div class="timeline-content">
+                        <h4>Foundation Models 적용</h4>
+                        <p>대규모 사전학습 모델이 자율주행 표준으로. BEV Transformer, Query-based 아키텍처 발전. 중국 시장 급부상.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year" style="background: #22c55e;">2025</div>
+                    <div class="timeline-content">
+                        <h4>FSD v13-v14</h4>
+                        <p>Occupancy Network 전면 적용. 도심 성능 대폭 향상. Level 3 규제 승인 논의 본격화. Robotaxi 경쟁 심화.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year" style="background: #16a34a;">2026-2030</div>
+                    <div class="timeline-content">
+                        <h4>상용화 가속</h4>
+                        <p>2026-2027: Level 3 확대. 2028: Level 4 제한적 상용화. 2029-2030: Robotaxi 대중화. MaaS 생태계 형성.</p>
+                    </div>
+                </div>
+            </div>
+
+            <p>이 타임라인에서 볼 수 있듯이, End-to-End 자율주행은 30년 이상의 긴 역사를 가지고 있다. 초기에는 컴퓨팅 성능과 데이터 부족으로 실용화되지 못했으나, 2010년대 딥러닝 혁명, 2020년대 Transformer와 Foundation Models의 등장으로 비약적으로 발전하고 있다.</p>
+        </section>
+
+        <section id="foundation-models">
+            <h2>4. Foundation Models와 생성 AI의 융합</h2>
+
+            <h3>4.1 Vision Transformer</h3>
+            <p>2020년 Google Research에서 발표한 Vision Transformer는 자연어 처리에서 성공을 거둔 Transformer 아키텍처를 이미지 인식에 적용한 것이다. 이미지를 작은 패치들로 나누고 이를 시퀀스로 취급하여 self-attention 메커니즘으로 처리한다. 자율주행 분야에서는 다중 카메라의 특징을 융합하고 시간적 일관성을 모델링하는 데 효과적으로 활용되고 있다.</p>
+
+            <h3>4.2 World Models</h3>
+            <p>World Models는 자율주행 시스템이 환경의 미래 상태를 예측하고 시뮬레이션할 수 있게 하는 생성 모델이다. Wayve의 GAIA-1, NVIDIA의 Neural World Model 등이 대표적이다. 이들은 과거 관측으로부터 미래 프레임을 생성하며, 가능한 행동의 결과를 미리 시뮬레이션하여 안전한 결정을 내릴 수 있게 한다.</p>
+
+            <h3>4.3 Diffusion Models</h3>
+            <p>Diffusion Models는 이미지 생성 분야에서 놀라운 성능을 보인 생성 AI 기법이다. 자율주행에서는 주로 데이터 증강과 시나리오 생성에 활용된다. 드물게 발생하는 위험 상황을 합성하여 시스템을 더 강건하게 학습시킬 수 있다.</p>
+
+            <h3>4.4 Bird's Eye View (BEV) 표현</h3>
+            <p>Bird's Eye View는 주변 환경을 차량 위에서 내려다본 것처럼 조감도로 표현하는 방식이다. 다중 카메라의 시점을 통합하고 3차원 공간 관계를 명확히 표현할 수 있어, End-to-End 자율주행 시스템의 핵심 중간 표현으로 자리잡았다.</p>
+        </section>
+
+        <section id="industry">
+            <h2>5. 글로벌 자율주행 산업의 현황</h2>
+
+            <h3>5.1 Tesla vs Waymo 비교</h3>
+
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h4>Tesla FSD</h4>
+                    <p><span class="label">Vision-Only</span> <span class="label">End-to-End</span></p>
+                    <ul style="margin-top: 15px; line-height: 1.8;">
+                        <li>카메라 8대 (센서 비용 < $1,000)</li>
+                        <li>완전 E2E 신경망 (v12+)</li>
+                        <li>Level 2+ (감독 필요)</li>
+                        <li>수백만 대 플릿 데이터</li>
+                        <li>빠른 배포, 지속적 업데이트</li>
+                        <li>대중 시장 목표</li>
+                    </ul>
+                </div>
+
+                <div class="comparison-card">
+                    <h4>Waymo Driver</h4>
+                    <p><span class="label">Multi-Sensor</span> <span class="label">Safety First</span></p>
+                    <ul style="margin-top: 15px; line-height: 1.8;">
+                        <li>카메라 29대 + LiDAR 5대 + 레이더 6대</li>
+                        <li>모듈식 아키텍처 (인지-예측-계획)</li>
+                        <li>Level 4 (완전 무인 달성)</li>
+                        <li>Phoenix, SF, LA, Austin 운영</li>
+                        <li>점진적 확장, 철저한 검증</li>
+                        <li>Robotaxi 서비스 (주당 15만+ 승차)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <p>Tesla와 Waymo는 자율주행이라는 동일한 목표를 향해 정반대의 경로를 걷고 있다. Tesla는 저비용 센서와 대규모 데이터를 활용하여 빠르게 반복 개발하며 대중 시장을 겨냥한다. 반면 Waymo는 고가의 센서와 철저한 검증을 통해 안전성을 최우선시하며, 제한된 지역에서 완전 무인 서비스를 실현했다.</p>
+        </section>
+
+        <section id="trends-2025">
+            <h2>6. 2025년 기술 동향과 산업 전망</h2>
+
+            <h3>6.1 FSD v13과 v14의 진화</h3>
+            <p>2025년은 Tesla FSD의 중요한 전환점이 되고 있다. FSD v13은 2025년 초 광범위하게 배포되어 End-to-End 신경망 아키텍처의 비중이 더욱 확대되었다. 도시 환경에서의 성능 향상이 특히 두드러지며, 사용자 보고에 따르면 인간 개입 빈도가 30-40% 감소했다.</p>
+
+            <p>FSD v14는 2025년 중반 출시를 목표로 개발 중이며, Occupancy Network의 전면적 적용이 핵심 혁신이다. 명시적으로 정의되지 않은 객체나 복잡한 형태의 장애물에 대한 강건성이 크게 향상될 것으로 기대된다.</p>
+
+            <h3>6.2 중국 시장의 급속한 발전</h3>
+            <p>중국은 2025년 현재 자율주행 분야에서 가장 빠르게 성장하고 있는 시장이다. 정부의 적극적인 지원, 대규모 투자, 빠른 규제 승인이 맞물려 상용화 속도가 매우 빠르다. 특히 도심 NOA 기능을 탑재한 차량이 급증하고 있으며, Robotaxi 시범 서비스도 여러 도시에서 운영 중이다.</p>
+
+            <h3>6.3 한국의 도전과 기회</h3>
+            <p>한국은 후발 주자로서 여러 도전에 직면해 있다. 가장 큰 문제는 데이터와 컴퓨팅 인프라의 격차이다. Tesla는 13만 5천 개의 GPU를 보유한 반면, 한국 기업들은 수십에서 수백 개 수준에 머물러 있다. 그러나 세계적인 자동차 제조 역량, 반도체 기술, 5G 인프라는 기회 요소이다.</p>
+        </section>
+
+        <section id="challenges">
+            <h2>7. 기술적 과제와 미래 전망</h2>
+
+            <h3>7.1 극복해야 할 핵심 과제</h3>
+
+            <h4>Long-tail 문제</h4>
+            <p>드물게 발생하는 복잡한 상황(long-tail events)은 자율주행 시스템의 가장 큰 도전이다. 학습 데이터에서 충분히 보지 못한 상황에서 시스템은 예측할 수 없는 행동을 할 수 있다. 생성 AI를 활용한 시나리오 합성, 시뮬레이션을 통한 데이터 증강 등이 해결책으로 연구되고 있다.</p>
+
+            <h4>안전성의 통계적 검증</h4>
+            <p>자율주행 시스템이 인간 운전자보다 안전하다는 것을 통계적으로 입증하려면 수십억 마일의 주행 데이터가 필요하다. 시뮬레이션, 형식 검증, 시나리오 기반 테스트 등을 조합한 다층적 접근이 필요하다.</p>
+
+            <h4>일반화: 새로운 환경으로의 적응</h4>
+            <p>특정 지역에서 학습된 시스템을 다른 지역으로 전이하는 것은 어렵다. 도로 구조, 교통 패턴, 운전 문화가 다르기 때문이다. Foundation Models의 전이 학습 능력을 활용하고, 도메인 적응 기법을 적용하는 연구가 진행 중이다.</p>
+
+            <h4>컴퓨팅 효율성</h4>
+            <p>실시간 처리를 위해서는 밀리초 단위의 지연시간이 필요하며, 차량의 전력 제약도 고려해야 한다. 모델 경량화, 양자화, 프루닝, 지식 증류 등의 기법이 활용되고 있다.</p>
+
+            <h3>7.2 2030년까지의 기술 로드맵</h3>
+
+            <div class="highlight-box">
+                <h4>2025-2026: NOA의 대중화와 Foundation Models의 표준화</h4>
+                <p>고속도로 NOA는 이미 보급되었으며, 도심 NOA도 빠르게 확대 중이다. Vision-centric 접근이 주류가 되고, Foundation Models가 자율주행의 표준 기술로 자리잡을 것이다.</p>
+
+                <h4>2027-2028: Level 3/4의 상용화와 World Models의 통합</h4>
+                <p>제한된 조건의 Level 3가 상용화되고, 일부 지역에서 Level 4도 실현된다. World Models가 계획 시스템의 핵심으로 부상하며, BEV와 Occupancy Networks가 표준 아키텍처로 자리잡는다.</p>
+
+                <h4>2029-2030: 완전 무인 자율주행의 실현</h4>
+                <p>Robotaxi 서비스가 주요 도시에서 24시간 운영되며, 경제성이 입증된다. 자율주행이 도시 교통 시스템의 상당 비중을 차지하고, 새로운 모빌리티 서비스 생태계가 형성된다.</p>
+            </div>
+        </section>
+
+        <section id="conclusion">
+            <h2>8. 결론</h2>
+
+            <p>본 보고서는 End-to-End 자율주행 기술의 현황과 미래를 포괄적으로 분석하였다. 전통적인 모듈식 아키텍처에서 통합적인 End-to-End 학습으로의 패러다임 전환은 자율주행 시스템을 설계하고 개발하는 근본적인 철학의 변화를 의미한다.</p>
+
+            <p>Foundation Models와 생성 AI의 융합은 자율주행 기술에 새로운 지평을 열었다. Vision Transformer, World Models, Diffusion Models, BEV 표현 등이 인지, 예측, 계획 능력을 혁신적으로 향상시키고 있다.</p>
+
+            <p>글로벌 산업 생태계는 빠르게 진화하고 있다. Tesla는 vision-only 접근과 완전한 End-to-End 아키텍처로, Waymo는 다중 센서와 Level 4 달성으로 각자의 경로를 개척하고 있다. 중국 시장은 정부 지원과 빠른 상용화로 세계를 선도하고 있으며, 한국은 후발 주자로서 도전과 기회를 동시에 맞이하고 있다.</p>
+
+            <p>향후 5년간 자율주행 기술은 급속히 발전할 것으로 전망된다. 2025-2026년에는 NOA 기능이 대중화되고 Foundation Models가 표준화될 것이다. 2027-2028년에는 Level 3/4가 상용화되고 World Models가 핵심 기술로 부상할 것이다. 2029-2030년에는 완전 무인 자율주행이 제한된 영역에서 실현되고, Robotaxi의 경제성이 입증될 것이다.</p>
+
+            <p>자율주행 기술은 단순한 운송 수단의 혁신을 넘어, 도시 구조, 생활 방식, 경제 생태계를 근본적으로 변화시킬 잠재력을 가지고 있다. 이러한 변화를 성공적으로 이끌기 위해서는 기술적 혁신뿐만 아니라 규제 프레임워크의 정립, 윤리적 기준 마련, 대중의 신뢰 구축, 사회적 합의 형성이 함께 이루어져야 한다.</p>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p><strong>End-to-End 자율주행 기술의 현황과 미래 전망</strong></p>
+            <p style="margin-top: 10px;">한국전자통신연구원 (KETI) | 지능형 모빌리티 연구센터</p>
+            <p style="margin-top: 20px; font-size: 0.9em;">본 보고서는 공개된 학술 문헌, 산업 자료, 기술 벤치마크를 종합하여 작성되었습니다.</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">© 2025 KETI. Generated with Claude Code.</p>
+        </div>
+    </footer>
+</body>
+</html>
